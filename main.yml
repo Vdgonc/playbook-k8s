@@ -1,5 +1,5 @@
 - hosts: all
-  user: root
+  user: ubuntu
   become: yes
   gather_facts: no
   pre_tasks:
@@ -15,19 +15,19 @@
       raw: 'apt install -y aptitude'
 
 - hosts: all
-  user: root
+  user: ubuntu
   become: yes
   roles:
     - install_k8s
 
 - hosts: master
-  user: root
+  user: ubuntu
   become: yes
   roles:
     - init_cluster
 
 - hosts: workers
-  user: root
+  user: ubuntu
   become: yes
   roles:
     - join_cluster

@@ -1,0 +1,9 @@
+[master]
+
+
+[workers]
+
+
+[workers:vars]
+MASTER_IP=
+MASTER_SECURE_PORT=6443 

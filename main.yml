@@ -1,0 +1,33 @@
+- hosts: all
+  user: root
+  become: yes
+  gather_facts: no
+  pre_tasks:
+    - name: Fazendo update
+      raw: 'apt update'
+    - name: Instalando python3
+      raw: 'apt install -y python3'
+    - name: Instalando python3-apt
+      raw: 'apt install -y python3-apt'
+    - name: Instalando apt-transport-https
+      raw: 'apt install -y apt-transport-https'
+    - name: Instalando aptitude
+      raw: 'apt install -y aptitude'
+
+- hosts: all
+  user: root
+  become: yes
+  roles:
+    - install_k8s
+
+- hosts: master
+  user: root
+  become: yes
+  roles:
+    - init_cluster
+
+- hosts: workers
+  user: root
+  become: yes
+  roles:
+    - join_cluster

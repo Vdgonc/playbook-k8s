@@ -1,0 +1,34 @@
+---
+- name: Init
+  command: kubeadm init
+  register: kubeinit
+
+- name: Criando diretory ./kube
+  file:
+    path: ~/.kube
+    state: directory
+
+- name: Criando symlink admin.conf para .kube/config
+  file:
+    src: /etc/kubernetes/admin.conf
+    dest: ~/.kube/config
+    state: link
+
+- name: Instalnado weavenet
+  shell: kubectl apply -f {{ wavenet_url }}
+  register: weavenet
+
+- name: Pegando token master
+  shell: kubeadm token list | cut -d ' ' -f1 | sed -n '2p'
+  register: k8s_token
+
+- name: CA hash
+  shell: openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+  register: k8s_ca_hash
+
+- name: "Criando variaveis de host"
+  add_host:
+    name:   "TOKEN_HOLDER"
+    token:  "{{ k8s_token.stdout }}"
+    hash:   "{{ k8s_ca_hash.stdout }}"
+

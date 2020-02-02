@@ -1,0 +1,3 @@
+---
+- name: kubeadm join
+  shell: kubeadm join --token {{ hostvars['TOKEN_HOLDER']['token'] }} --discovery-token-ca-cert-hash sha256:{{ hostvars['TOKEN_HOLDER']['hash'] }} {{ MASTER_IP }}:{{ MASTER_SECURE_PORT }}
